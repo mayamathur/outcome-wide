@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1550494145651.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2329187509",
+    "id" : "5F8C2133",
+    "lastKnownWriteTime" : 1550495209,
+    "last_content_update" : 1550495209166,
+    "path" : "~/Dropbox/Personal computer/Independent studies/Tyler's outcome-wide paper/Linked to OSF (OWP)/General code for outcome-wide analyses/Fake data/make_fake_data.R",
+    "project_path" : "Fake data/make_fake_data.R",
+    "properties" : {
+        "cursorPosition" : "82,1",
+        "scrollLine" : "62"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1550496002263.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1685685741",
+    "id" : "66B49976",
+    "lastKnownWriteTime" : 1550497027,
+    "last_content_update" : 1550497027719,
+    "path" : "~/Dropbox/Personal computer/Independent studies/Tyler's outcome-wide paper/Linked to OSF (OWP)/General code for outcome-wide analyses/merge_results.R",
+    "project_path" : "merge_results.R",
+    "properties" : {
+        "cursorPosition" : "25,40",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

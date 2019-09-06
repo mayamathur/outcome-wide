@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1567624425428.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "3C29C7D1",
+    "lastKnownWriteTime" : 1567728954,
+    "last_content_update" : 1567728954066,
+    "path" : "~/Dropbox/Personal computer/Independent studies/Tyler's outcome-wide paper/Linked to OSF (OWP)/Applied example/Code/helper_functions.R",
+    "project_path" : "helper_functions.R",
+    "properties" : {
+        "cursorPosition" : "120,32",
+        "scrollLine" : "104"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

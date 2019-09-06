@@ -1,0 +1,6 @@
+"","Outcome","Est","Est.Unrounded","SE","SE.Unrounded","CI","pval","Analyzed.n","Reject.Romano","Theta.hat","Global.pval","Null.int","Excess.hits"
+"1","My binary outcome 1",1.39,0.329625195253276,"0.13",0.127406581798301,"[1.08, 1.78]","9.68E-03**",NA,NA,NA,NA," [NA, NA]",NA
+"2","My binary outcome 2",1.55,0.440679911563111,"0.13",0.127865778765357,"[1.21, 2.00]","5.68E-04***",NA,NA,NA,NA," [NA, NA]",NA
+"3","My binary outcome 3",1.09,0.083326691126407,"0.13",0.127563603933563,"[0.85, 1.40]","0.514",NA,NA,NA,NA," [NA, NA]",NA
+"4","My binary outcome 4",0.78,-0.245961290739394,"0.13",0.127621326879912,"[0.61, 1.00]","0.054",NA,NA,NA,NA," [NA, NA]",NA
+"5","My binary outcome 5",1.14,0.133248057055434,"0.29",0.290597873527417,"[0.65, 2.02]","0.647",NA,NA,NA,NA," [NA, NA]",NA

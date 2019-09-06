@@ -1,0 +1,5 @@
+"","Outcome","Est","Est.Unrounded","SE","SE.Unrounded","CI","pval","Analyzed.n","Reject.Romano","Theta.hat","Global.pval","Null.int","Excess.hits"
+"1","My continuous outcome 1",0.37,0.369486963510922,"0.06",0.0633548665255775,"[0.25, 0.49]","< 1E-05***",983,NA,NA,NA," [NA, NA]",NA
+"2","My continuous outcome 2",0.25,0.245541147313446,"0.06",0.062994879512435,"[0.12, 0.37]","1.04E-04***",981,NA,NA,NA," [NA, NA]",NA
+"3","My continuous outcome 3",0.21,0.210754807580538,"0.06",0.0626465296848208,"[0.09, 0.33]","7.97E-04***",979,NA,NA,NA," [NA, NA]",NA
+"4","My continuous outcome 4",0.26,0.259863679610838,"0.06",0.0647933223603401,"[0.13, 0.39]","6.51E-05***",983,NA,NA,NA," [NA, NA]",NA
