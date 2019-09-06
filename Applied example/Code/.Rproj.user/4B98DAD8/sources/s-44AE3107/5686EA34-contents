@@ -448,11 +448,11 @@ if ( TMLE == FALSE & missingness == "MI" ) {
 
     # check bhats
     require(testthat)
-    expect_equal( bhats.pool[i], bhat.pool.man )
-    expect_equal( ses.pool[i], se.pool.man )
-    expect_equal( lo.pool[i], lo.man )
-    expect_equal( hi.pool[i], hi.man )
-    expect_equal( pvals.pool[i], pval.man )
+    expect_equal( bhats.pool[i], bhat.pool.man, tol = 0.001 )
+    expect_equal( ses.pool[i], se.pool.man, tol = 0.001 )
+    expect_equal( lo.pool[i], lo.man, tol = 0.001 )
+    expect_equal( hi.pool[i], hi.man, tol = 0.001 )
+    expect_equal( pvals.pool[i], pval.man, tol = 0.001 )
 
   }
 }

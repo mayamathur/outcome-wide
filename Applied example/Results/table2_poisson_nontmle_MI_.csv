@@ -1,0 +1,6 @@
+"","Outcome","Est","Est.Unrounded","SE","SE.Unrounded","CI","pval","Analyzed.n","Reject.Romano","Theta.hat","Global.pval","Null.int","Excess.hits"
+"1","Overweight or obese",0.99,-0.00569107187504651,"0.03",0.0254782255102339,"[0.95, 1.05]","0.823",NA,NA,NA,NA," [NA, NA]",NA
+"2","Current or former smoking",0.95,-0.0546529004161267,"0.03",0.0281196654215827,"[0.90, 1.00]","0.052",NA,NA,NA,NA," [NA, NA]",NA
+"3","Heavy drinking",0.98,-0.0206850432820661,"0.06",0.0591065273582572,"[0.87, 1.10]","0.726",NA,NA,NA,NA," [NA, NA]",NA
+"4","oth_sub",0.85,-0.166108582717003,"0.06",0.0606328293197767,"[0.75, 0.95]","6.15E-03**",NA,NA,NA,NA," [NA, NA]",NA
+"5","Depression",0.77,-0.261227795658928,"0.06",0.0576947999801426,"[0.69, 0.86]","< 1E-05***",NA,NA,NA,NA," [NA, NA]",NA

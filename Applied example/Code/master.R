@@ -28,10 +28,14 @@ stochastic.results.dir = paste(root.dir, "/Linked to OSF (OWP)/Applied example/R
 codebook.dir = paste(root.dir, "/Linked to OSF (OWP)/Applied example", sep="")
 
 # read in data
-setwd(data.dir)
-library(readr)
-d = suppressMessages( read_csv("flourish_prepped.csv") )
-d = as.data.frame(d)
+# setwd(data.dir)
+# library(readr)
+# d = suppressMessages( read_csv("flourish_prepped.csv") )
+# d = as.data.frame(d)
+
+# TEMP
+setwd("~/Desktop")
+d = read.csv("data_prepped.csv")
 
 # load the helper code
 setwd(code.dir)
@@ -59,27 +63,24 @@ Ylin = c("flourish_z",
          "B1SPWBU1z",
          "B1SPWBS1z")
 
-# outcomes that will be modeled with logistic regression
-# ~~~ bookmark
-Ybin = c( "B1SBMIc", # overweight
-          "B1PA39", # smoking
-          "B1PA53", # binge drinking
-          "B1SA62G", # marijuana 
-          "B1SA62A", # other drugs
-          
-          "B1PDEPDX", # depression
-          "B1PANXTD" # anxiety
-)
+# outcomes that will be modeled with logistic regression (rare)
+Ybin = c( 
+          "B1SA62G",  # CHANGED FROM B1SA62A
+          "B1PANXTD" )
 
-# outcomes that will be modeled with Poisson regression
+# outcomes that will be modeled with Poisson regression (common)
 # none in this example
-Ycount = NA
+Ycount = c("B1SBMIc",
+           "smoke",
+           "binge_c",
+           "oth_sub",
+           "B1PDEPDX")
 
 # exposure of interest
 Xname = "A1SEPA_z"
 
 # adjusted covariates in MI analyses other than exposure of interest
-Cnames.MI  = c( #"A1SEPA_z",
+Cnames.MI  = c( 
                 "A1PAGE_M2",
                 "A1PRSEX",
                 "raceA",
@@ -134,34 +135,44 @@ sort( apply( d[ , names(d) %in% c(Ylin, Ybin) ],
       decreasing = TRUE )
 
 
-##### Look At Correlations Among Variables #####
-# this is to foreshadow problems with mice() due to collinearity
-# needs to be done in this code chunk, prior to making variables categorical
-corr = round( cor( d[ complete.cases(d), ] ), 2 )
-
-# are the any variables with large correlations?
-corr[ corr > 0.8 & corr < 1 ]
-
-# look at highest correlation (not 1) for each variable
-apply( corr, 2, function(x) max( abs(x[x < 1]) ) )
+# ##### Look At Correlations Among Variables #####
+# # this is to foreshadow problems with mice() due to collinearity
+# # needs to be done in this code chunk, prior to making variables categorical
+# corr = round( cor( d[ complete.cases(d), ] ), 2 )
+# 
+# # are the any variables with large correlations?
+# corr[ corr > 0.8 & corr < 1 ]
+# 
+# # look at highest correlation (not 1) for each variable
+# apply( corr, 2, function(x) max( abs(x[x < 1]) ) )
 
 
 ##### Which Binary Outcomes are Rare? #####
 # this is used when computing E-values for logistic regression
 # from most common to least common
-prevalence = sort( apply( d[ , names(d) %in% Ybin ], 
-             2, 
-             function(x) sum(x[!is.na(x)]) / length(x[!is.na(x)]) ),
-              decreasing = TRUE )
+# prevalence = sort( apply( d[ , names(d) %in% Ybin ], 
+#              2, 
+#              function(x) sum( binarize(x)[!is.na(x)]) / length(x[!is.na(x)]) ),
+#               decreasing = TRUE )
+
+prev_fn = function(x) {
+  x = x[!is.na(x)]
+  return( sum(x == "b.Yes") / length(x) )
+}
+
+library(dplyr)
+prevalence = sort( d %>% select(Ybin, Ycount) %>%
+  summarise_all(prev_fn), decreasing = TRUE )
+
 # save list of rare binaries for use in analysis post-processing
 setwd(results.dir)
-write.csv( data.frame( name = names( prevalence[ prevalence < .1 ] ) ),
+write.csv( data.frame( name = names(prevalence)[ prevalence < .1 ] ),
            "list_of_rare_binaries.csv",
            row.names = FALSE )
 
 ########################### MAKE IMPUTATIONS (OR READ THEM IN) ########################### 
 
-# recode variables to appease mice
+# recode character variables to factors to appease mice
 library(dplyr)
 sum(sapply(d, is.character))  # check number of character vars
 d = d %>% mutate_if(sapply(d, is.character), as.factor)
@@ -170,7 +181,7 @@ sum(sapply(d, is.character))  # check again; should be 0
 
 # imputation parameters
 missingness = "MI" # missing data method ("MI" or "CC")
-impute.from.scratch = TRUE
+impute.from.scratch = FALSE
 
 # number of imputations
 # increase above 5 if some vars have >30% missingness
@@ -187,7 +198,7 @@ source("make_imputations.R")
 
 # look at one imputed dataset
 library(tableone)
-CreateTableOne(data=imps[[1]], includeNA=TRUE)
+CreateTableOne(data=imps[[4]], includeNA=TRUE)
 
 
 ########################### RECODE VARIABLES ###########################
@@ -230,15 +241,15 @@ setwd( results.dir )
 write.csv(tab1mat, file = "table1_sanity.csv")
 
 
-# read them back in to have in convenient list
-# read in existing imputations
-# we're doing this even if impute.from.scratch=TRUE to have same data format
-# i.e., a list of imputed datasets instead of a mids object
-setwd(stochastic.results.dir)
-setwd("Imputed datasets as csvs")
-
-imps = lapply( list.files(),
-               function(x) suppressMessages(read_csv(x)) )
+# # read them back in to have in convenient list
+# # read in existing imputations
+# # we're doing this even if impute.from.scratch=TRUE to have same data format
+# # i.e., a list of imputed datasets instead of a mids object
+# setwd(stochastic.results.dir)
+# setwd("Imputed datasets as csvs")
+# 
+# imps = lapply( list.files(),
+#                function(x) suppressMessages(read_csv(x)) )
 
 
 
@@ -246,21 +257,57 @@ imps = lapply( list.files(),
 #                          MAIN-TEXT RESULTS                                #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ # 
 
-########################### RUN #0 (TEST): SET ANALYSIS PARAMETERS ###########################
+# ########################### RUN #0a (TEST OLS): SET ANALYSIS PARAMETERS ###########################
+# 
+# # dry run: OLS with no resampling
+# 
+# missingness = "CC" # missing data method ("MI" or "CC")
+# 
+# 
+# # set link ("OLS", "poisson", "logistic")
+# # spelling needs to match options within function fit_model
+# link = "OLS"
+# 
+# # TMLE or standard MLE?
+# TMLE = FALSE
+# 
+# # resampling parameters
+# # should we run from saved imputations or re-impute?
+# resample = FALSE
+# resample.from.scratch = FALSE
+# B.resamp = 1000
+# 
+# # familywise alpha
+# # we always set this to 0.05
+# alpha = 0.05
+# 
+# # alpha for individual tests
+# # we did both 0.05 and 0.01
+# alpha.within = 0.05
+# 
+# setwd(code.dir)
+# source("analysis.R")
+# 
+# 
+########################### RUN #0 (TEST LOGISTIC): SET ANALYSIS PARAMETERS ###########################
 
 # dry run: OLS with no resampling
 
+missingness = "CC" # missing data method ("MI" or "CC")
+
+
 # set link ("OLS", "poisson", "logistic")
 # spelling needs to match options within function fit_model
-link = "OLS"
+link = "logistic"
 
 # TMLE or standard MLE?
 TMLE = FALSE
 
 # resampling parameters
 # should we run from saved imputations or re-impute?
-resample = TRUE
-resample.from.scratch = TRUE
+resample = FALSE
+resample.from.scratch = FALSE
+B.resamp = 1000
 
 # familywise alpha
 # we always set this to 0.05
@@ -274,8 +321,43 @@ setwd(code.dir)
 source("analysis.R")
 
 
+########################### RUN #0 (TEST POISSON): SET ANALYSIS PARAMETERS ###########################
+
+# dry run: OLS with no resampling
+
+missingness = "CC" # missing data method ("MI" or "CC")
+
+
+# set link ("OLS", "poisson", "logistic")
+# spelling needs to match options within function fit_model
+link = "poisson"
+
+# TMLE or standard MLE?
+TMLE = FALSE
+
+# resampling parameters
+# should we run from saved imputations or re-impute?
+resample = FALSE
+resample.from.scratch = FALSE
+B.resamp = 1000
+
+# familywise alpha
+# we always set this to 0.05
+alpha = 0.05
+
+# alpha for individual tests
+# we did both 0.05 and 0.01
+alpha.within = 0.05
+
+setwd(code.dir)
+source("analysis.R")
+
+
+
 ########################### RUN #1: OLS / resample = TRUE / TMLE = FALSE ########################### 
 
+missingness = "MI" # missing data method ("MI" or "CC")
+M = 5
 # we will now run analysis.R once for each of four model specifications:
 # OLS / resample = TRUE / TMLE = FALSE
 # OLS / resample = FALSE / TMLE = TRUE
@@ -294,8 +376,8 @@ write.results = TRUE
 
 
 # no resampling
-resample = TRUE
-resample.from.scratch = TRUE
+resample = FALSE   # ~~~ change
+resample.from.scratch = FALSE
 B.resamp = 1000 # number of resamples (this is just a toy example; way too small in practice)
 
 # familywise alpha
@@ -310,8 +392,68 @@ setwd(code.dir)
 source("analysis.R")
 
 
+########################### RUN #1: LOGISTIC / resample = FALSE / TMLE = FALSE ########################### 
+
+missingness = "MI"
+# set link ("OLS", "poisson", "logistic")
+# spelling needs to match options within function fit_model
+link = "logistic"
+
+# TMLE or standard MLE?
+TMLE = FALSE
+
+# should we overwrite previous results files?
+write.results = TRUE
+
+
+# no resampling
+resample = FALSE
+resample.from.scratch = FALSE
+
+# familywise alpha
+# we always set this to 0.05
+alpha = 0.05
+
+# alpha for individual tests
+# we did both 0.05 and 0.01
+alpha.within = 0.05
+
+setwd(code.dir)
+source("analysis.R")
+
+
+########################### RUN #1: POISSON / resample = FALSE / TMLE = FALSE ########################### 
+
+missingness = "MI"
+# set link ("OLS", "poisson", "logistic")
+# spelling needs to match options within function fit_model
+link = "logistic"
+
+# TMLE or standard MLE?
+TMLE = FALSE
+
+# should we overwrite previous results files?
+write.results = TRUE
+
+
+# no resampling
+resample = FALSE
+resample.from.scratch = FALSE
+
+# familywise alpha
+# we always set this to 0.05
+alpha = 0.05
+
+# alpha for individual tests
+# we did both 0.05 and 0.01
+alpha.within = 0.05
+
+setwd(code.dir)
+source("analysis.R")
+
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ # 
-#                   SUPPLEMENT RESULTS - TERTILES                            #
+#                SUPPLEMENT RESULTS - TERTILES & TMLE                        #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ # 
 
 ########################### SUPPLEMENTAL RUN #1 - TERTILES : OLS / resample = FALSE / TMLE = FALSE ########################### 
@@ -376,7 +518,7 @@ setwd(code.dir)
 source("analysis.R")
 
 
-########################### SUPPLEMENTAL RUN #2 - TERTILES : OLS / resample = FALSE / TMLE = FALSE ########################### 
+########################### SUPPLEMENTAL RUN #2 - TERTILES : OLS / resample = FALSE / TMLE = TRUE ########################### 
 
 
 Xname = "A1SEPA_top"

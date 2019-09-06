@@ -5,20 +5,20 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "0",
+    "hash" : "1268393173",
     "id" : "9E231BFD",
-    "lastKnownWriteTime" : 1567728247,
-    "last_content_update" : 1567728247414,
+    "lastKnownWriteTime" : 1567790352,
+    "last_content_update" : 1567790352828,
     "path" : "~/Dropbox/Personal computer/Independent studies/Tyler's outcome-wide paper/Linked to OSF (OWP)/Applied example/Code/master.R",
     "project_path" : "master.R",
     "properties" : {
-        "cursorPosition" : "33,20",
-        "scrollLine" : "0"
+        "cursorPosition" : "58,21",
+        "scrollLine" : "60"
     },
     "read_only" : false,
     "read_only_alternatives" : [
     ],
-    "relative_order" : 1,
+    "relative_order" : 2,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "r_source"
