@@ -404,11 +404,11 @@ fit_model = function( X,
     
     tryCatch( {
       # defaults to super-learning
-      mod = tmle( Y = d[[Y]],
-                  A = d[[X]],
-                  W = d[ , Cnames ],
-                  family = "binomial" )
-      
+        mod = tmle( Y = binarize(d[[Y]]),
+                    A = d[[X]],
+                    W = d[ , Cnames ],
+                    family = "binomial" )
+
     }, error = function(err) {
       # needs to be superassignment because inside fn
       browser()

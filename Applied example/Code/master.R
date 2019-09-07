@@ -245,11 +245,11 @@ write.csv(tab1mat, file = "table1_sanity.csv")
 # # read in existing imputations
 # # we're doing this even if impute.from.scratch=TRUE to have same data format
 # # i.e., a list of imputed datasets instead of a mids object
-# setwd(stochastic.results.dir)
-# setwd("Imputed datasets as csvs")
-# 
-# imps = lapply( list.files(),
-#                function(x) suppressMessages(read_csv(x)) )
+setwd(stochastic.results.dir)
+setwd("Imputed datasets as csvs")
+
+imps = lapply( list.files(),
+               function(x) suppressMessages(read_csv(x)) )
 
 
 
@@ -392,7 +392,7 @@ setwd(code.dir)
 source("analysis.R")
 
 
-########################### RUN #1: LOGISTIC / resample = FALSE / TMLE = FALSE ########################### 
+########################### RUN #2: LOGISTIC / resample = FALSE / TMLE = FALSE ########################### 
 
 missingness = "MI"
 # set link ("OLS", "poisson", "logistic")
@@ -422,7 +422,7 @@ setwd(code.dir)
 source("analysis.R")
 
 
-########################### RUN #1: POISSON / resample = FALSE / TMLE = FALSE ########################### 
+########################### RUN #3: POISSON / resample = FALSE / TMLE = FALSE ########################### 
 
 missingness = "MI"
 # set link ("OLS", "poisson", "logistic")
@@ -487,13 +487,13 @@ setwd(code.dir)
 source("analysis.R")
 
 
-########################### SUPPLEMENTAL RUN #1 - TERTILES : LOGISTIC / resample = FALSE / TMLE = FALSE ########################### 
+########################### SUPPLEMENTAL RUN #2 - TERTILES : LOGISTIC / resample = FALSE / TMLE = FALSE ########################### 
 
 Xname = "A1SEPA_top"
 
 # set link ("OLS", "poisson", "logistic")
 # spelling needs to match options within function fit_model
-link = "OLS"
+link = "logistic"
 
 # TMLE or standard MLE?
 TMLE = FALSE
@@ -518,8 +518,39 @@ setwd(code.dir)
 source("analysis.R")
 
 
-########################### SUPPLEMENTAL RUN #2 - TERTILES : OLS / resample = FALSE / TMLE = TRUE ########################### 
+########################### SUPPLEMENTAL RUN #3 - TERTILES : POISSON / resample = FALSE / TMLE = FALSE ########################### 
 
+Xname = "A1SEPA_top"
+
+# set link ("OLS", "poisson", "logistic")
+# spelling needs to match options within function fit_model
+link = "poisson"
+
+# TMLE or standard MLE?
+TMLE = FALSE
+
+# should we overwrite previous results files?
+write.results = TRUE
+
+
+# no resampling
+resample = FALSE
+resample.from.scratch = FALSE
+
+# familywise alpha
+# we always set this to 0.05
+alpha = 0.05
+
+# alpha for individual tests
+# we did both 0.05 and 0.01
+alpha.within = 0.05
+
+setwd(code.dir)
+source("analysis.R")
+
+
+
+########################### SUPPLEMENTAL RUN #4 - TERTILES : OLS / resample = FALSE / TMLE = TRUE ########################### 
 
 Xname = "A1SEPA_top"
 
@@ -548,6 +579,69 @@ alpha.within = 0.05
 
 setwd(code.dir)
 source("analysis.R")
+
+
+########################### SUPPLEMENTAL RUN #5 - TERTILES : LOGISTIC / resample = FALSE / TMLE = TRUE ########################### 
+
+Xname = "A1SEPA_top"
+
+# set link ("OLS", "poisson", "logistic")
+# spelling needs to match options within function fit_model
+link = "logistic"
+
+# TMLE or standard MLE?
+TMLE = TRUE
+
+# should we overwrite previous results files?
+write.results = TRUE
+
+
+# no resampling
+resample = FALSE
+resample.from.scratch = FALSE
+
+# familywise alpha
+# we always set this to 0.05
+alpha = 0.05
+
+# alpha for individual tests
+# we did both 0.05 and 0.01
+alpha.within = 0.05
+
+setwd(code.dir)
+source("analysis.R")
+
+
+########################### SUPPLEMENTAL RUN #6 - TERTILES : POISSON / resample = FALSE / TMLE = TRUE ########################### 
+
+Xname = "A1SEPA_top"
+
+# set link ("OLS", "poisson", "logistic")
+# spelling needs to match options within function fit_model
+link = "poisson"
+
+# TMLE or standard MLE?
+TMLE = TRUE
+
+# should we overwrite previous results files?
+write.results = TRUE
+
+
+# no resampling
+resample = FALSE
+resample.from.scratch = FALSE
+
+# familywise alpha
+# we always set this to 0.05
+alpha = 0.05
+
+# alpha for individual tests
+# we did both 0.05 and 0.01
+alpha.within = 0.05
+
+setwd(code.dir)
+source("analysis.R")
+
 
 
 ########################### POST-PROCESSING ON SUPPLEMENTAL RESULTS ########################### 

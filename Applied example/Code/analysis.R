@@ -379,83 +379,83 @@ evals.CI[is.na(evals.CI)] = evals.hi[is.na(evals.lo)]
 
 
 
-########################### CODE SANITY CHECKS ###########################
-
-
-# choose one outcome at a time and look at estimates and inference
-#  on the main exposure of interest
-
-if ( TMLE == FALSE & missingness == "MI" ) {
-  for ( i in 1:length(Ynames) ) {
-
-    cat( "\n Manually checking", link, "outcome number ", i)
-
-    # results for this outcome
-    bhat.man = c()
-    se.man = c()
-    pvals.man = c()
-
-    # fit model to each imputed dataset
-    for ( j in 1:M ) {
-
-      dat = imps[[j]]
-
-      covars = c(Xname, Cnames)
-
-      if ( link == "OLS" ) mod = lm( dat[[ Ynames[i] ]] ~ ., data = dat[ , covars] )
-      if ( link == "poisson" ) {
-        # if binary variable, make sure it's 0/1 instead of "b.No"/"a.Yes"
-        if ( length( unique( dat[[ Ynames[i] ]] ) ) == 2 ) tempY = binarize( dat[[ Ynames[i] ]] )
-        else tempY = dat[[ Ynames[i] ]]
-
-        mod = glm( tempY ~ ., data = dat[ , covars], family = "poisson" )
-      }
-      if ( link == "logistic" ) mod = glm( dat[[ Ynames[i] ]] ~ ., data = dat[ , covars], family = "binomial" )
-
-      # save within-imputation results for this imputation
-      # only saving results for exposure of interest
-      bhat.man = c( bhat.man, coef(mod)[[2]] )
-      se.man = c( se.man, summary(mod)$coefficients[2,"Std. Error"] )
-    }
-
-    # pool results
-    bhat.pool.man = mean( bhat.man )
-
-    # Rubin's Rules by hand
-    Ubar = mean(se.man^2)
-    B = ( 1 / (M-1) ) * sum( ( bhat.man - mean(bhat.man) )^2 )
-    total.var = Ubar + ( 1 + (1/M) ) * B
-    se.pool.man = sqrt(total.var)
-
-    # CIs by hand
-    if ( link == "OLS" ) {
-      df = nrow(dat) - length(covars) - 1
-      t = abs( bhat.pool.man / se.pool.man )
-      pval.man = 2 * ( 1 - pt( t,
-                               df = df ) )
-
-      lo.man = bhat.pool.man - qt(.975, df = df) * se.pool.man
-      hi.man = bhat.pool.man + qt(.975, df = df) * se.pool.man
-    }
-
-    if ( link == "poisson" | link == "logistic" ) {
-      z = abs( bhat.pool.man / se.pool.man )
-      pval.man = 2 * ( 1 - pnorm( z ) )
-
-      lo.man = bhat.pool.man - qnorm(.975) * se.pool.man
-      hi.man = bhat.pool.man + qnorm(.975) * se.pool.man
-    }
-
-    # check bhats
-    require(testthat)
-    expect_equal( bhats.pool[i], bhat.pool.man, tol = 0.001 )
-    expect_equal( ses.pool[i], se.pool.man, tol = 0.001 )
-    expect_equal( lo.pool[i], lo.man, tol = 0.001 )
-    expect_equal( hi.pool[i], hi.man, tol = 0.001 )
-    expect_equal( pvals.pool[i], pval.man, tol = 0.001 )
-
-  }
-}
+# ########################### CODE SANITY CHECKS ###########################
+# 
+# 
+# # choose one outcome at a time and look at estimates and inference
+# #  on the main exposure of interest
+# 
+# if ( TMLE == FALSE & missingness == "MI" ) {
+#   for ( i in 1:length(Ynames) ) {
+# 
+#     cat( "\n Manually checking", link, "outcome number ", i)
+# 
+#     # results for this outcome
+#     bhat.man = c()
+#     se.man = c()
+#     pvals.man = c()
+# 
+#     # fit model to each imputed dataset
+#     for ( j in 1:M ) {
+# 
+#       dat = imps[[j]]
+# 
+#       covars = c(Xname, Cnames)
+# 
+#       if ( link == "OLS" ) mod = lm( dat[[ Ynames[i] ]] ~ ., data = dat[ , covars] )
+#       if ( link == "poisson" ) {
+#         # if binary variable, make sure it's 0/1 instead of "b.No"/"a.Yes"
+#         if ( length( unique( dat[[ Ynames[i] ]] ) ) == 2 ) tempY = binarize( dat[[ Ynames[i] ]] )
+#         else tempY = dat[[ Ynames[i] ]]
+# 
+#         mod = glm( tempY ~ ., data = dat[ , covars], family = "poisson" )
+#       }
+#       if ( link == "logistic" ) mod = glm( dat[[ Ynames[i] ]] ~ ., data = dat[ , covars], family = "binomial" )
+# 
+#       # save within-imputation results for this imputation
+#       # only saving results for exposure of interest
+#       bhat.man = c( bhat.man, coef(mod)[[2]] )
+#       se.man = c( se.man, summary(mod)$coefficients[2,"Std. Error"] )
+#     }
+# 
+#     # pool results
+#     bhat.pool.man = mean( bhat.man )
+# 
+#     # Rubin's Rules by hand
+#     Ubar = mean(se.man^2)
+#     B = ( 1 / (M-1) ) * sum( ( bhat.man - mean(bhat.man) )^2 )
+#     total.var = Ubar + ( 1 + (1/M) ) * B
+#     se.pool.man = sqrt(total.var)
+# 
+#     # CIs by hand
+#     if ( link == "OLS" ) {
+#       df = nrow(dat) - length(covars) - 1
+#       t = abs( bhat.pool.man / se.pool.man )
+#       pval.man = 2 * ( 1 - pt( t,
+#                                df = df ) )
+# 
+#       lo.man = bhat.pool.man - qt(.975, df = df) * se.pool.man
+#       hi.man = bhat.pool.man + qt(.975, df = df) * se.pool.man
+#     }
+# 
+#     if ( link == "poisson" | link == "logistic" ) {
+#       z = abs( bhat.pool.man / se.pool.man )
+#       pval.man = 2 * ( 1 - pnorm( z ) )
+# 
+#       lo.man = bhat.pool.man - qnorm(.975) * se.pool.man
+#       hi.man = bhat.pool.man + qnorm(.975) * se.pool.man
+#     }
+# 
+#     # check bhats
+#     require(testthat)
+#     expect_equal( bhats.pool[i], bhat.pool.man, tol = 0.001 )
+#     expect_equal( ses.pool[i], se.pool.man, tol = 0.001 )
+#     expect_equal( lo.pool[i], lo.man, tol = 0.001 )
+#     expect_equal( hi.pool[i], hi.man, tol = 0.001 )
+#     expect_equal( pvals.pool[i], pval.man, tol = 0.001 )
+# 
+#   }
+# }
 
 
 
