@@ -467,7 +467,8 @@ Ybin = c(
   "oth_sub",
   "B1PDEPDX")
 
-# overwrite the old file
+# hack to use logistic regression even for common outcomes:
+# overwrite the old file so that all outcomes are listed as rare
 setwd(results.dir)
 write.csv( data.frame( name = names(prevalence) ),
            "list_of_rare_binaries.csv",
