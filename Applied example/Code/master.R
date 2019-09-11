@@ -456,6 +456,25 @@ source("analysis.R")
 #                SUPPLEMENT RESULTS - TERTILES & TMLE                        #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ # 
 
+
+# outcomes that will be modeled with logistic regression (all of them for this analysis)
+Ybin = c( 
+  "B1SA62G",  # CHANGED FROM B1SA62A
+  "B1PANXTD",
+  "B1SBMIc",
+  "smoke",
+  "binge_c",
+  "oth_sub",
+  "B1PDEPDX")
+
+# overwrite the old file
+setwd(results.dir)
+write.csv( data.frame( name = names(prevalence) ),
+           "list_of_rare_binaries.csv",
+           row.names = FALSE )
+
+
+
 ########################### SUPPLEMENTAL RUN #1 - TERTILES : OLS / resample = FALSE / TMLE = FALSE ########################### 
 
 Xname = "A1SEPA_top"
@@ -494,37 +513,6 @@ Xname = "A1SEPA_top"
 # set link ("OLS", "poisson", "logistic")
 # spelling needs to match options within function fit_model
 link = "logistic"
-
-# TMLE or standard MLE?
-TMLE = FALSE
-
-# should we overwrite previous results files?
-write.results = TRUE
-
-
-# no resampling
-resample = FALSE
-resample.from.scratch = FALSE
-
-# familywise alpha
-# we always set this to 0.05
-alpha = 0.05
-
-# alpha for individual tests
-# we did both 0.05 and 0.01
-alpha.within = 0.05
-
-setwd(code.dir)
-source("analysis.R")
-
-
-########################### SUPPLEMENTAL RUN #3 - TERTILES : POISSON / resample = FALSE / TMLE = FALSE ########################### 
-
-Xname = "A1SEPA_top"
-
-# set link ("OLS", "poisson", "logistic")
-# spelling needs to match options within function fit_model
-link = "poisson"
 
 # TMLE or standard MLE?
 TMLE = FALSE
@@ -641,10 +629,6 @@ alpha.within = 0.05
 
 setwd(code.dir)
 source("analysis.R")
-
-
-
-########################### POST-PROCESSING ON SUPPLEMENTAL RESULTS ########################### 
 
 
 

@@ -34,7 +34,7 @@ b.ratio.when.larger = my_round( mean(b.ratio[ b.ratio > 1 ] ), digits = 2 )
 
 # mean ratio when TMLE is smaller
 b.ratio.when.smaller = my_round( mean(b.ratio[ b.ratio < 1 ] ), digits = 2 )
-
+1/b.ratio.when.smaller  # get % that the TMLE estimate is larger
 
 ##### Standard Errors #####
 # SE: percent of times that TMLE SE is smaller
